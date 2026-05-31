@@ -257,7 +257,9 @@
 
 <!-- NAV -->
 <nav id="navbar">
-    <a href="#home" class="logo"><img src="logo.png" alt="欧桥商务 EuroBridge"></a>
+    <a href="#home" class="logo">
+        <img src="logo.png" alt="欧桥商务 EuroBridge" style="height:44px;width:auto;">
+    </a>
     <div class="nav-right">
         <ul class="nav-links">
             <li>
@@ -436,19 +438,8 @@
 <section class="section section-alt" id="about">
     <div class="about-grid">
         <div class="about-visual">
-            <div class="about-img">
-                <svg viewBox="0 0 300 220" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0.18;">
-                    <rect x="30" y="30" width="240" height="160" stroke="#c8a96e" stroke-width="1" fill="none"/>
-                    <rect x="60" y="55" width="180" height="110" stroke="#c8a96e" stroke-width="0.5" fill="none"/>
-                    <line x1="30" y1="30" x2="270" y2="190" stroke="#c8a96e" stroke-width="0.5"/>
-                    <line x1="270" y1="30" x2="30" y2="190" stroke="#c8a96e" stroke-width="0.5"/>
-                    <circle cx="150" cy="110" r="50" stroke="#c8a96e" stroke-width="0.8" fill="none"/>
-                    <circle cx="150" cy="110" r="25" stroke="#c8a96e" stroke-width="0.5" fill="none"/>
-                </svg>
-                <div style="position:relative;text-align:center;">
-                    <div style="font-family:'Playfair Display',serif;font-size:1.2rem;color:white;opacity:0.9;letter-spacing:0.05em;">EuroBridge</div>
-                    <div style="font-size:0.65rem;color:rgba(200,169,110,0.8);letter-spacing:0.2em;text-transform:uppercase;margin-top:0.4rem;">Consulting</div>
-                </div>
+            <div class="about-img" style="background:#f4f7f5;display:flex;align-items:center;justify-content:center;">
+                <img src="logo.png" alt="欧桥商务 EuroBridge" style="width:78%;max-width:320px;height:auto;">
             </div>
             <div class="about-badge">
                 <div class="about-badge-num">DE</div>
@@ -556,7 +547,9 @@
 
 <!-- FOOTER -->
 <footer>
-    <a href="#home" class="logo"><img src="logo.png" alt="欧桥商务 EuroBridge" style="height:32px;filter:brightness(0) invert(1);opacity:0.85;"></a>
+    <a href="#home" style="text-decoration:none;">
+        <span style="font-family:'Playfair Display',serif;font-size:1.1rem;color:rgba(255,255,255,0.9);letter-spacing:0.03em;">EuroBridge <span style="color:rgba(255,255,255,0.55);font-size:0.9rem;">欧桥商务</span></span>
+    </a>
     <p>© 2025 欧桥商务 EuroBridge. <span data-lang="en">All rights reserved.</span><span data-lang="zh">版权所有。</span></p>
     <p><a href="mailto:info@eurobridge.space">info@eurobridge.space</a></p>
 </footer>
@@ -595,7 +588,7 @@ form.addEventListener('submit', async e => {
         const res = await fetch(form.action, {
             method: 'POST',
             body: new FormData(form),
-            headers: { 'Accaept': 'application/json' }
+            headers: { 'Accept': 'application/json' }
         });
         if (res.ok) {
             form.style.display = 'none';
