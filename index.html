@@ -1,25 +1,614 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>EuroBridge Consulting</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EuroBridge Consulting | Connecting China and Europe</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Noto+Serif+SC:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --white: #ffffff;
+            --off-white: #f8f6f1;
+            --navy: #1a1a2e;
+            --gold: #c8a96e;
+            --gold-light: #e8d5b0;
+            --gray: #6b6b7b;
+            --border: #e8e4dc;
+            --font-display: 'Playfair Display', serif;
+            --font-body: 'DM Sans', sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: var(--font-body); color: var(--navy); background: var(--white); line-height: 1.7; overflow-x: hidden; }
+
+        /* NAV */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 5%; height: 72px;
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            transition: box-shadow 0.3s;
+        }
+        nav.scrolled { box-shadow: 0 2px 24px rgba(26,26,46,0.08); }
+        .logo { font-family: var(--font-display); font-size: 1.3rem; color: var(--navy); letter-spacing: 0.02em; text-decoration: none; }
+        .logo span { color: var(--gold); }
+        .nav-right { display: flex; align-items: center; gap: 2rem; }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a { text-decoration: none; color: var(--gray); font-size: 0.8rem; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--gold); }
+
+        .lang-toggle {
+            position: relative; display: flex; align-items: center; gap: 0.3rem;
+            cursor: pointer; padding: 0.35rem 0.85rem;
+            border: 1px solid var(--border); border-radius: 3px;
+            font-size: 0.78rem; font-weight: 500; color: var(--navy);
+            transition: all 0.2s; background: white; user-select: none;
+        }
+        .lang-toggle:hover { border-color: var(--gold); color: var(--gold); }
+        .lang-dropdown {
+            display: none; position: absolute; top: calc(100% + 8px); right: 0;
+            background: white; border: 1px solid var(--border); border-radius: 4px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1); min-width: 110px; overflow: hidden; z-index: 200;
+        }
+        .lang-toggle.open .lang-dropdown { display: block; }
+        .lang-option { padding: 0.65rem 1rem; font-size: 0.85rem; cursor: pointer; transition: background 0.15s; color: var(--navy); }
+        .lang-option:hover { background: var(--off-white); }
+        .lang-option.active { color: var(--gold); font-weight: 500; }
+
+        /* HERO */
+        .hero {
+            min-height: 100vh; display: flex; align-items: center;
+            padding: 72px 5% 0; position: relative; overflow: hidden;
+        }
+        .hero-bg {
+            position: absolute; top: 0; right: 0; width: 48%; height: 100%;
+            background: var(--off-white);
+            clip-path: polygon(12% 0, 100% 0, 100% 100%, 0% 100%);
+        }
+        .hero-pattern {
+            position: absolute; top: 50%; right: 4%;
+            transform: translateY(-50%);
+            width: 360px; height: 360px; opacity: 0.06; pointer-events: none;
+        }
+        .hero-content { position: relative; max-width: 580px; animation: fadeUp 0.9s ease both; }
+        .hero-tag {
+            display: inline-block; font-size: 0.72rem; font-weight: 500;
+            letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold);
+            margin-bottom: 1.5rem; padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--gold-light);
+        }
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2.4rem, 5vw, 3.75rem);
+            line-height: 1.15; color: var(--navy); margin-bottom: 1.5rem; font-weight: 600;
+        }
+        .hero h1 em { font-style: normal; color: var(--gold); }
+        .hero-desc { font-size: 1rem; color: var(--gray); max-width: 440px; margin-bottom: 2.5rem; font-weight: 300; line-height: 1.85; }
+        .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+        .btn-primary {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 0.9rem 2rem; background: var(--navy); color: white;
+            text-decoration: none; font-family: var(--font-body);
+            font-size: 0.82rem; font-weight: 500; letter-spacing: 0.06em;
+            text-transform: uppercase; border: 2px solid var(--navy);
+            transition: all 0.25s; cursor: pointer;
+        }
+        .btn-primary:hover { background: var(--gold); border-color: var(--gold); color: white; }
+        .btn-outline {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 0.9rem 2rem; background: transparent; color: var(--navy);
+            text-decoration: none; font-family: var(--font-body);
+            font-size: 0.82rem; font-weight: 500; letter-spacing: 0.06em;
+            text-transform: uppercase; border: 2px solid var(--border);
+            transition: all 0.25s; cursor: pointer;
+        }
+        .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+        .hero-stats { display: flex; gap: 3rem; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+        .stat-num { font-family: var(--font-display); font-size: 1.8rem; font-weight: 600; color: var(--navy); line-height: 1; }
+        .stat-label { font-size: 0.7rem; color: var(--gray); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.3rem; }
+
+        /* SECTIONS */
+        .section { padding: 6rem 5%; }
+        .section-alt { background: var(--off-white); }
+        .section-header { max-width: 540px; margin-bottom: 3.5rem; }
+        .section-tag { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+        .divider { width: 44px; height: 2px; background: var(--gold); margin-bottom: 1.5rem; }
+        .section-title { font-family: var(--font-display); font-size: clamp(1.75rem, 3vw, 2.4rem); color: var(--navy); line-height: 1.25; margin-bottom: 1rem; }
+        .section-desc { font-size: 0.93rem; color: var(--gray); font-weight: 300; line-height: 1.85; }
+
+        /* SERVICES GRID */
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5px; background: var(--border); border: 1.5px solid var(--border); }
+        .service-card { background: white; padding: 2.5rem; transition: all 0.3s; position: relative; overflow: hidden; }
+        .service-card::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 3px; background: var(--gold); transition: width 0.4s ease; }
+        .service-card:hover::after { width: 100%; }
+        .service-card:hover { background: var(--navy); }
+        .service-card:hover .service-title { color: white; }
+        .service-card:hover .service-body { color: rgba(255,255,255,0.6); }
+        .service-card:hover .service-num { color: rgba(255,255,255,0.04); }
+        .service-icon { font-size: 1.75rem; margin-bottom: 1.25rem; display: block; }
+        .service-num { position: absolute; top: 1.25rem; right: 1.75rem; font-family: var(--font-display); font-size: 3rem; font-weight: 600; color: var(--off-white); line-height: 1; transition: color 0.3s; }
+        .service-title { font-family: var(--font-display); font-size: 1.15rem; font-weight: 500; color: var(--navy); margin-bottom: 0.75rem; transition: color 0.3s; }
+        .service-body { font-size: 0.875rem; color: var(--gray); line-height: 1.78; font-weight: 300; transition: color 0.3s; }
+
+        /* ABOUT */
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+        .about-visual { position: relative; }
+        .about-img {
+            width: 100%; aspect-ratio: 4/3; background: var(--navy);
+            position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;
+        }
+        .about-badge {
+            position: absolute; bottom: -1.5rem; right: -1.5rem;
+            width: 130px; height: 130px; background: var(--gold);
+            display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+        }
+        .about-badge-num { font-family: var(--font-display); font-size: 2rem; font-weight: 600; color: var(--navy); line-height: 1; }
+        .about-badge-text { font-size: 0.65rem; font-weight: 500; color: var(--navy); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 0.35rem; }
+        .about-list { list-style: none; display: flex; flex-direction: column; gap: 0.9rem; margin-bottom: 2rem; }
+        .about-list li { display: flex; gap: 0.75rem; font-size: 0.9rem; color: var(--gray); font-weight: 300; align-items: flex-start; }
+        .about-list li::before { content: '→'; color: var(--gold); flex-shrink: 0; margin-top: 0.1rem; }
+
+        /* CONTACT */
+        .contact-grid { display: grid; grid-template-columns: 1fr 1.7fr; gap: 5rem; align-items: start; }
+        .contact-item { margin-bottom: 2rem; }
+        .contact-label { display: block; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.3rem; }
+        .contact-value { font-size: 0.95rem; color: var(--navy); }
+        a.contact-value { text-decoration: none; transition: color 0.2s; }
+        a.contact-value:hover { color: var(--gold); }
+
+        .contact-form { display: grid; gap: 1.2rem; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+        .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+        .form-group label { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray); }
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 0.85rem 1rem; border: 1px solid var(--border); background: white;
+            font-family: var(--font-body); font-size: 0.9rem; color: var(--navy);
+            outline: none; transition: border-color 0.2s; border-radius: 0;
+            -webkit-appearance: none; appearance: none;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--gold); }
+        .form-group textarea { resize: vertical; min-height: 120px; }
+        .form-success {
+            display: none; padding: 1.25rem; background: #f0f8f0; border: 1px solid #b8d8b8;
+            color: #2d5a2d; font-size: 0.9rem; text-align: center; border-radius: 2px;
+        }
+
+        /* FOOTER */
+        footer {
+            background: var(--navy); color: rgba(255,255,255,0.45);
+            padding: 2.5rem 5%; display: flex; align-items: center;
+            justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+        }
+        footer .logo { color: white; font-size: 1.1rem; }
+        footer p { font-size: 0.78rem; }
+        footer a { color: var(--gold-light); text-decoration: none; }
+        footer a:hover { color: var(--gold); }
+
+        /* TRADE FAIR STRIP */
+        .fairs-strip {
+            margin-top: 3.5rem;
+            padding-top: 3rem;
+            border-top: 1px solid var(--border);
+        }
+        .fairs-label {
+            font-size: 0.7rem; font-weight: 500; letter-spacing: 0.15em;
+            text-transform: uppercase; color: var(--gray); text-align: center;
+            margin-bottom: 2rem;
+        }
+        .fairs-row {
+            display: flex; flex-wrap: wrap; justify-content: center;
+            gap: 1rem;
+        }
+        .fair-badge {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 0.55rem; padding: 1.2rem 1.6rem;
+            border: 1.5px solid var(--border); background: white;
+            min-width: 130px; min-height: 90px; text-align: center;
+            transition: all 0.25s; cursor: default; position: relative; overflow: hidden;
+        }
+        .fair-badge::before {
+            content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+            height: 3px; background: var(--fair-color, var(--gold));
+        }
+        .fair-badge:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.08); border-color: var(--fair-color, var(--gold)); }
+        .fair-name-main {
+            font-size: 1.05rem; font-weight: 700; line-height: 1.15;
+            color: var(--fair-color, var(--navy)); letter-spacing: -0.01em;
+            font-family: var(--font-body);
+        }
+        .fair-name-sub {
+            font-size: 0.7rem; font-weight: 400; color: var(--gray);
+            text-transform: uppercase; letter-spacing: 0.1em; line-height: 1.3;
+        }
+        .fair-dot {
+            width: 7px; height: 7px; border-radius: 50%;
+            background: var(--fair-color, var(--gold)); flex-shrink: 0;
+        }
+
+        /* ANIMATIONS */
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* LANGUAGE — default Chinese, no mixing */
+        [data-lang]            { display: none; }
+        [data-lang="zh"]       { display: inline; }
+        body.en [data-lang="en"] { display: inline; }
+        body.en [data-lang="zh"] { display: none; }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+            .about-badge { bottom: -1rem; right: -1rem; }
+        }
+        @media (max-width: 640px) {
+            .nav-links { display: none; }
+            .hero-bg { clip-path: none; width: 100%; opacity: 0.4; }
+            .hero-stats { flex-wrap: wrap; gap: 1.5rem; }
+            .form-row { grid-template-columns: 1fr; }
+            .services-grid { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 <body>
-    <h1>EuroBridge Consulting</h1>
 
-    <h2>Connecting China and Europe</h2>
+<!-- NAV -->
+<nav id="navbar">
+    <a href="#home" class="logo">Euro<span>Bridge</span></a>
+    <div class="nav-right">
+        <ul class="nav-links">
+            <li>
+                <a href="#services" data-lang="en">Services</a>
+                <a href="#services" data-lang="zh">服务</a>
+            </li>
+            <li>
+                <a href="#about" data-lang="en">About</a>
+                <a href="#about" data-lang="zh">关于</a>
+            </li>
+            <li>
+                <a href="#contact" data-lang="en">Contact</a>
+                <a href="#contact" data-lang="zh">联系</a>
+            </li>
+        </ul>
+        <div class="lang-toggle" id="langToggle">
+            <span id="langLabel">中文</span> ▾
+            <div class="lang-dropdown">
+                <div class="lang-option active" data-val="zh">中文</div>
+                <div class="lang-option" data-val="en">English</div>
+            </div>
+        </div>
+    </div>
+</nav>
 
-    <p>
-        We help Chinese companies expand into the European market.
-    </p>
+<!-- HERO -->
+<section class="hero" id="home">
+    <div class="hero-bg"></div>
+    <svg class="hero-pattern" viewBox="0 0 220 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="110" cy="110" r="100" stroke="#1a1a2e" stroke-width="1"/>
+        <circle cx="110" cy="110" r="75" stroke="#1a1a2e" stroke-width="1"/>
+        <circle cx="110" cy="110" r="50" stroke="#1a1a2e" stroke-width="1"/>
+        <circle cx="110" cy="110" r="25" stroke="#1a1a2e" stroke-width="1"/>
+        <line x1="10" y1="110" x2="210" y2="110" stroke="#1a1a2e" stroke-width="0.8"/>
+        <line x1="110" y1="10" x2="110" y2="210" stroke="#1a1a2e" stroke-width="0.8"/>
+        <line x1="39" y1="39" x2="181" y2="181" stroke="#1a1a2e" stroke-width="0.8"/>
+        <line x1="181" y1="39" x2="39" y2="181" stroke="#1a1a2e" stroke-width="0.8"/>
+    </svg>
+    <div class="hero-content">
+        <div class="hero-tag">
+            <span data-lang="en">Germany · Europe · China</span>
+            <span data-lang="zh">德国 · 欧洲 · 中国</span>
+        </div>
+        <h1>
+            <span data-lang="en">Bridging China<br>&amp; <em>European</em><br>Markets</span>
+            <span data-lang="zh">连接中国<br>与<em>欧洲</em>市场</span>
+        </h1>
+        <p class="hero-desc">
+            <span data-lang="en">We help Chinese companies establish a strong presence across Europe — from trade fair representation to long-term market development.</span>
+            <span data-lang="zh">我们帮助中国企业在欧洲建立稳固市场存在——从展会代理到长期市场开拓，全程支持。</span>
+        </p>
+        <div class="hero-cta">
+            <a href="#contact" class="btn-primary">
+                <span data-lang="en">Get in Touch</span>
+                <span data-lang="zh">联系我们</span>
+            </a>
+            <a href="#services" class="btn-outline">
+                <span data-lang="en">Our Services</span>
+                <span data-lang="zh">了解服务</span>
+            </a>
+        </div>
+        <div class="hero-stats">
+            <div>
+                <div class="stat-num">DE</div>
+                <div class="stat-label"><span data-lang="en">Germany-Based Team</span><span data-lang="zh">德国本地团队</span></div>
+            </div>
+            <div>
+                <div class="stat-num">B2B</div>
+                <div class="stat-label"><span data-lang="en">Enterprise Focused</span><span data-lang="zh">专注企业客户</span></div>
+            </div>
+            <div>
+                <div class="stat-num" style="font-size:1.1rem;line-height:1.4;">中德<br>双文化</div>
+                <div class="stat-label"><span data-lang="en">Bicultural Expertise</span><span data-lang="zh">中德双重文化背景</span></div>
+            </div>
+        </div>
+    </div>
+</section>
 
-    <ul>
-        <li>Market Development</li>
-        <li>Trade Fair Support</li>
-        <li>Business Matching</li>
-        <li>Storage & Energy Industry Consulting</li>
-    </ul>
+<!-- SERVICES -->
+<section class="section" id="services">
+    <div class="section-header">
+        <div class="section-tag"><span data-lang="en">What We Do</span><span data-lang="zh">我们的服务</span></div>
+        <div class="divider"></div>
+        <h2 class="section-title">
+            <span data-lang="en">Your Gateway to the European Market</span>
+            <span data-lang="zh">打通欧洲市场的关键支点</span>
+        </h2>
+        <p class="section-desc">
+            <span data-lang="en">From certification to client relationships, we handle every step of your European expansion.</span>
+            <span data-lang="zh">从产品认证到客户维护，我们全程覆盖您在欧洲的每一个业务环节。</span>
+        </p>
+    </div>
+    <div class="services-grid">
+        <div class="service-card">
+            <span class="service-num">01</span>
+            <span class="service-icon">🏅</span>
+            <h3 class="service-title"><span data-lang="en">Certification & Compliance</span><span data-lang="zh">欧盟合规与产品认证</span></h3>
+            <p class="service-body">
+                <span data-lang="en">Guidance through European certification processes — TÜV, CE, IEC, and other standards required to enter regulated markets.</span>
+                <span data-lang="zh">协助完成欧洲产品认证流程，包括 TÜV、CE、IEC 等市场准入必备认证，帮您顺利进入受监管市场。</span>
+            </p>
+        </div>
+        <div class="service-card">
+            <span class="service-num">02</span>
+            <span class="service-icon">🏛️</span>
+            <h3 class="service-title"><span data-lang="en">Trade Fair Representation</span><span data-lang="zh">展会全程策划与代理</span></h3>
+            <p class="service-body">
+                <span data-lang="en">Full-service trade fair support: pre-show strategy, on-site representation, visitor engagement, and qualified lead development.</span>
+                <span data-lang="zh">展前策划、现场代理、访客拓展及高质量线索开发，提供展会全流程服务。</span>
+            </p>
+        </div>
+        <div class="service-card">
+            <span class="service-num">03</span>
+            <span class="service-icon">🤝</span>
+            <h3 class="service-title"><span data-lang="en">Business Escort & Interpretation</span><span data-lang="zh">商务随行与专业口译</span></h3>
+            <p class="service-body">
+                <span data-lang="en">Professional accompanying services for meetings, negotiations, and site visits — trilingual support in Chinese, English, and German.</span>
+                <span data-lang="zh">商务会议、谈判及工厂参观的全程陪同，提供中英德三语专业翻译，确保沟通无障碍。</span>
+            </p>
+        </div>
+        <div class="service-card">
+            <span class="service-num">04</span>
+            <span class="service-icon">📈</span>
+            <h3 class="service-title"><span data-lang="en">Market Growth & Client Relations</span><span data-lang="zh">市场拓展与客户关系运营</span></h3>
+            <p class="service-body">
+                <span data-lang="en">Long-term European market development combined with ongoing client relationship management to secure and grow your customer base.</span>
+                <span data-lang="zh">长期欧洲市场开发与持续客户关系维护，帮您稳固并扩大欧洲客户群体。</span>
+            </p>
+        </div>
+    </div>
 
-    <p>Email: info@eurobridge.space</p>
+    <!-- Trade Fair Strip -->
+    <div class="fairs-strip">
+        <div class="fairs-label">
+            <span data-lang="en">Active at Germany's Leading Trade Fairs</span>
+            <span data-lang="zh">活跃于德国各大行业展会</span>
+        </div>
+        <div class="fairs-row">
+            <div class="fair-badge" style="--fair-color:#005CA9;">
+                <div class="fair-name-main">HANNOVER<br>MESSE</div>
+                <div class="fair-name-sub">Hannover · Annual</div>
+            </div>
+            <div class="fair-badge" style="--fair-color:#F07D00;">
+                <div class="fair-name-main">intersolar</div>
+                <div class="fair-name-sub">EUROPE · Munich</div>
+            </div>
+            <div class="fair-badge" style="--fair-color:#00529B;">
+                <div class="fair-name-main">ees<br>Europe</div>
+                <div class="fair-name-sub">Energy Storage · Munich</div>
+            </div>
+            <div class="fair-badge" style="--fair-color:#3AAA35;">
+                <div class="fair-name-main">The<br>smarter E</div>
+                <div class="fair-name-sub">EUROPE · Munich</div>
+            </div>
+            <div class="fair-badge" style="--fair-color:#C8002A;">
+                <div class="fair-name-main">electro<br>nica</div>
+                <div class="fair-name-sub">Munich · Biennial</div>
+            </div>
+            <div class="fair-badge" style="--fair-color:#E84E0F;">
+                <div class="fair-name-main">Light +<br>Building</div>
+                <div class="fair-name-sub">Frankfurt · Biennial</div>
+            </div>
+            <div class="fair-badge" style="--fair-color:#004A99;">
+                <div class="fair-name-main">WindEnergy</div>
+                <div class="fair-name-sub">Hamburg</div>
+            </div>
+            <div class="fair-badge" style="--fair-color:#F0AB00;">
+                <div class="fair-name-main" style="color:#333;">bauma</div>
+                <div class="fair-name-sub">Munich · Triennial</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ABOUT -->
+<section class="section section-alt" id="about">
+    <div class="about-grid">
+        <div class="about-visual">
+            <div class="about-img">
+                <svg viewBox="0 0 300 220" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0.18;">
+                    <rect x="30" y="30" width="240" height="160" stroke="#c8a96e" stroke-width="1" fill="none"/>
+                    <rect x="60" y="55" width="180" height="110" stroke="#c8a96e" stroke-width="0.5" fill="none"/>
+                    <line x1="30" y1="30" x2="270" y2="190" stroke="#c8a96e" stroke-width="0.5"/>
+                    <line x1="270" y1="30" x2="30" y2="190" stroke="#c8a96e" stroke-width="0.5"/>
+                    <circle cx="150" cy="110" r="50" stroke="#c8a96e" stroke-width="0.8" fill="none"/>
+                    <circle cx="150" cy="110" r="25" stroke="#c8a96e" stroke-width="0.5" fill="none"/>
+                </svg>
+                <div style="position:relative;text-align:center;">
+                    <div style="font-family:'Playfair Display',serif;font-size:1.2rem;color:white;opacity:0.9;letter-spacing:0.05em;">EuroBridge</div>
+                    <div style="font-size:0.65rem;color:rgba(200,169,110,0.8);letter-spacing:0.2em;text-transform:uppercase;margin-top:0.4rem;">Consulting</div>
+                </div>
+            </div>
+            <div class="about-badge">
+                <div class="about-badge-num">DE</div>
+                <div class="about-badge-text"><span data-lang="en">Germany<br>Based</span><span data-lang="zh">德国<br>本地</span></div>
+            </div>
+        </div>
+        <div class="about-content">
+            <div class="section-header" style="margin-bottom:2rem;">
+                <div class="section-tag"><span data-lang="en">About Us</span><span data-lang="zh">关于我们</span></div>
+                <div class="divider"></div>
+                <h2 class="section-title">
+                    <span data-lang="en">Your Bridge Between Two Worlds</span>
+                    <span data-lang="zh">连接两个世界的桥梁</span>
+                </h2>
+                <p class="section-desc">
+                    <span data-lang="en">Based in Germany, EuroBridge Consulting specialises in helping Chinese companies navigate and succeed in the European market. We combine local expertise with a deep understanding of Chinese business culture.</span>
+                    <span data-lang="zh">EuroBridge Consulting 总部位于德国，专注于帮助中国企业进入欧洲市场。我们将本地专业知识与对中国商业文化的深刻理解相结合，为客户提供实用高效的市场进入方案。</span>
+                </p>
+            </div>
+            <ul class="about-list">
+                <li><span data-lang="en">Germany-based team with European market expertise</span><span data-lang="zh">扎根德国，深耕欧洲市场</span></li>
+                <li><span data-lang="en">Fluent in Chinese, German, and English</span><span data-lang="zh">中英德三语服务，沟通无障碍</span></li>
+                <li><span data-lang="en">Specialised in energy storage and industrial sectors</span><span data-lang="zh">专注储能与工业领域</span></li>
+                <li><span data-lang="en">Active presence at major European trade fairs</span><span data-lang="zh">活跃于欧洲各大行业展会</span></li>
+            </ul>
+            <a href="#contact" class="btn-primary">
+                <span data-lang="en">Work With Us</span>
+                <span data-lang="zh">与我们合作</span>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- CONTACT -->
+<section class="section" id="contact">
+    <div class="contact-grid">
+        <div class="contact-info">
+            <div class="section-tag"><span data-lang="en">Contact</span><span data-lang="zh">联系我们</span></div>
+            <div class="divider"></div>
+            <h2 class="section-title" style="margin-bottom:1rem;">
+                <span data-lang="en">Start the Conversation</span>
+                <span data-lang="zh">开始合作对话</span>
+            </h2>
+            <p class="section-desc" style="margin-bottom:2.5rem;">
+                <span data-lang="en">Ready to explore the European market? Reach out and we'll respond within one business day.</span>
+                <span data-lang="zh">准备好开拓欧洲市场了吗？联系我们，我们将在一个工作日内回复。</span>
+            </p>
+            <div class="contact-item">
+                <span class="contact-label">Email</span>
+                <a href="mailto:info@eurobridge.space" class="contact-value">info@eurobridge.space</a>
+            </div>
+            <div class="contact-item">
+                <span class="contact-label"><span data-lang="en">Location</span><span data-lang="zh">所在地</span></span>
+                <span class="contact-value"><span data-lang="en">Germany, Europe</span><span data-lang="zh">德国，欧洲</span></span>
+            </div>
+            <div class="contact-item">
+                <span class="contact-label"><span data-lang="en">Languages</span><span data-lang="zh">服务语言</span></span>
+                <span class="contact-value">中文 &nbsp;·&nbsp; English &nbsp;·&nbsp; Deutsch</span>
+            </div>
+        </div>
+        <div>
+            <div id="formSuccess" class="form-success">
+                <span data-lang="en">✓ Message sent! We'll get back to you soon.</span>
+                <span data-lang="zh">✓ 消息已发送！我们将尽快与您联系。</span>
+            </div>
+            <!-- ⚠️ Replace YOUR_FORM_ID with your Formspree ID after signing up at formspree.io -->
+            <form class="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST" id="contactForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><span data-lang="en">Name</span><span data-lang="zh">姓名</span></label>
+                        <input type="text" name="name" required placeholder="Your name">
+                    </div>
+                    <div class="form-group">
+                        <label><span data-lang="en">Company</span><span data-lang="zh">公司</span></label>
+                        <input type="text" name="company" placeholder="Company name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" required placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label><span data-lang="en">Service Interest</span><span data-lang="zh">感兴趣的服务</span></label>
+                    <select name="service">
+                        <option value="" disabled selected>— <span data-lang="en">Select</span><span data-lang="zh">请选择</span> —</option>
+                        <option value="market">Market Development / 市场开发</option>
+                        <option value="tradefair">Trade Fair Support / 展会服务</option>
+                        <option value="matching">Business Matching / 商业对接</option>
+                        <option value="energy">Energy Storage / 储能咨询</option>
+                        <option value="other">Other / 其他</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label><span data-lang="en">Message</span><span data-lang="zh">留言</span></label>
+                    <textarea name="message" required placeholder="Tell us about your project..."></textarea>
+                </div>
+                <button type="submit" class="btn-primary" style="width:100%;border:none;">
+                    <span data-lang="en">Send Message</span>
+                    <span data-lang="zh">发送消息</span>
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <a href="#home" class="logo">Euro<span>Bridge</span> Consulting</a>
+    <p>© 2025 EuroBridge Consulting. <span data-lang="en">All rights reserved.</span><span data-lang="zh">版权所有。</span></p>
+    <p><a href="mailto:info@eurobridge.space">info@eurobridge.space</a></p>
+</footer>
+
+<script>
+// Navbar scroll effect
+window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+});
+
+// Language toggle — default Chinese
+const langToggle = document.getElementById('langToggle');
+langToggle.addEventListener('click', e => { e.stopPropagation(); langToggle.classList.toggle('open'); });
+document.addEventListener('click', () => langToggle.classList.remove('open'));
+
+document.querySelectorAll('.lang-option').forEach(opt => {
+    opt.addEventListener('click', e => {
+        e.stopPropagation();
+        const lang = opt.dataset.val;
+        document.body.classList.toggle('en', lang === 'en');
+        document.getElementById('langLabel').textContent = lang === 'zh' ? '中文' : 'EN';
+        document.querySelectorAll('.lang-option').forEach(o => o.classList.remove('active'));
+        opt.classList.add('active');
+        langToggle.classList.remove('open');
+    });
+});
+
+// Contact form via Formspree
+const form = document.getElementById('contactForm');
+const submitBtn = form.querySelector('button[type=submit]');
+form.addEventListener('submit', async e => {
+    e.preventDefault();
+    submitBtn.textContent = '...';
+    submitBtn.disabled = true;
+    try {
+        const res = await fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: { 'Accept': 'application/json' }
+        });
+        if (res.ok) {
+            form.style.display = 'none';
+            document.getElementById('formSuccess').style.display = 'block';
+        } else {
+            submitBtn.textContent = 'Error — email us directly';
+            submitBtn.disabled = false;
+        }
+    } catch {
+        submitBtn.textContent = 'Error — email us directly';
+        submitBtn.disabled = false;
+    }
+});
+</script>
 </body>
 </html>
